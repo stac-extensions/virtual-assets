@@ -1,14 +1,15 @@
 # Template Extension Specification
 
-- **Title:** Template
-- **Identifier:** <https://stac-extensions.github.io/template/v1.0.0/schema.json>
-- **Field Name Prefix:** template
+- **Title:** Virtual Assets
+- **Identifier:** <https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json>
+- **Field Name Prefix:** virtual
 - **Scope:** Item, Collection
 - **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
-- **Owner**: @your-gh-handles @person2
+- **Owner**: @emmanuelmathot
 
-This document explains the Template Extension to the [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
-This is the place to add a short introduction.
+This document explains the Virtual Assets Extension to the [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
+The virtual assets extensions is an extension for STAC Item and Collection that allows a virtual assets to be composed from *physical* assets (actual remote files) or virtual assets. It describes repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
+
 
 - Examples:
   - [Item example](examples/item.json): Shows the basic usage of the extension in a STAC Item
@@ -20,34 +21,28 @@ This is the place to add a short introduction.
 
 | Field Name           | Type                      | Description |
 | -------------------- | ------------------------- | ----------- |
-| template:new_field   | string                    | **REQUIRED**. Describe the required field... |
-| template:xyz         | [XYZ Object](#xyz-object) | Describe the field... |
-| template:another_one | \[number]                 | Describe the field... |
+| virtual:assets       | [Virtual Asset Object](#virtual-asset-object) | **REQUIRED**. Dictionary of virtual asset objects that can be composed, each with a unique key. |
 
-### Additional Field Information
+### Virtual Asset Object
 
-#### template:new_field
+the virtual asset object is an extension of the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object). It inherits of all its fields (`href`, `title`, `description`, `type`, `roles`).
 
-This is a much more detailed description of the field `template:new_field`...
+| Field Name  | Type      | Description |
+| ----------- | --------- | ----------- |
+| href        | \[string]    | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragement only preceded by `#` char identify an asset of the current Item or Collection. |
+| title       | string    | The displayed title for clients and users. |
+| description | string    | A description of the Asset providing additional details, such as how it was processed or created. [CommonMark 0.29](http://commonmark.org/) syntax MAY be used for rich text representation. |
+| type        | string    | [Media type](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-media-type) of the asset. See the [common media types](../best-practices.md#common-media-types-in-stac) in the best practice doc for commonly used asset types. |
+| roles       | \[string] | The [semantic roles](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-roles) of the asset, similar to the use of `rel` in links. |
 
-### XYZ Object
+#### Asset cross referencing using href
 
-This is the introduction for the purpose and the content of the XYZ Object...
+URIs defined in the href arrays may reference several location according to the type of URI notation used. 
+Here are the accepted URI types and their location resolution
 
-| Field Name  | Type   | Description |
-| ----------- | ------ | ----------- |
-| x           | number | **REQUIRED**. Describe the required field... |
-| y           | number | **REQUIRED**. Describe the required field... |
-| z           | number | **REQUIRED**. Describe the required field... |
-
-## Relation types
-
-The following types should be used as applicable `rel` types in the
-[Link Object](https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md#link-object).
-
-| Type                | Description |
-| ------------------- | ----------- |
-| fancy-rel-type      | This link points to a fancy resource. |
+- `#B04` : Asset with key `B04` in the current STAC Item.
+- `./item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
+- `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
 
 ## Contributing
 
