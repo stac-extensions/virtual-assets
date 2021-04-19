@@ -16,7 +16,7 @@ The virtual assets extensions is an extension for STAC Item and Collection that 
 - [JSON Schema](json-schema/schema.json)
 - [Changelog](./CHANGELOG.md)
 
-## Item objects
+## Item fields
 
 | Field Name           | Type                      | Description |
 | -------------------- | ------------------------- | ----------- |
