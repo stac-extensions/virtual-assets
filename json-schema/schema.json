@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stac-extensions.github.io/template/v1.0.0/schema.json#",
-  "title": "Template Extension",
-  "description": "STAC Template Extension for STAC Items and STAC Collections.",
+  "$id": "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json#",
+  "title": "Virtual Assets Extension",
+  "description": "STAC Virtual Assets Extension for STAC Items and STAC Collections.",
   "oneOf": [
     {
       "$comment": "This is the schema for STAC Items. Remove this object if this extension only applies to Collections.",
@@ -11,31 +11,18 @@
           "type": "object",
           "required": [
             "type",
-            "properties",
-            "assets"
+            "assets",
+            "virtual:assets"
           ],
           "properties": {
             "type": {
               "const": "Feature"
             },
-            "properties": {
-              "allOf": [
-                {
-                  "$comment": "Require fields here for item properties.",
-                  "required": [
-                    "template:new_field"
-                  ]
-                },
-                {
-                  "$ref": "#/definitions/fields"
-                }
-              ]
-            },
             "assets": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/fields"
-              }
+              "type": "object"
+            },
+            "virtual:assets": {
+              "$ref": "#/definitions/virtual-assets"
             }
           }
         },
@@ -45,37 +32,28 @@
       ]
     },
     {
-      "$comment": "This is the schema for STAC Collections. Remove this object if this extension does not define top-level fields for Collections AND can't be used in collection assets or item asset defintions.",
       "allOf": [
         {
           "type": "object",
           "required": [
-            "type"
+            "type",
+            "assets",
+            "virtual:assets"
           ],
           "properties": {
             "type": {
               "const": "Collection"
             },
             "assets": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/fields"
-              }
+              "type": "object"
             },
-            "item_assets": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/fields"
-              }
+            "virtual:assets": {
+              "$ref": "#/definitions/virtual-assets"
             }
           }
         },
         {
           "$ref": "#/definitions/stac_extensions"
-        },
-        {
-          "$comment": "Remove this object if this extension does not define top-level fields for Collections.",
-          "$ref": "#/definitions/fields"
         }
       ]
     }
@@ -90,50 +68,72 @@
         "stac_extensions": {
           "type": "array",
           "contains": {
-            "const": "https://stac-extensions.github.io/template/v1.0.0/schema.json"
+            "const": "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json"
           }
         }
       }
     },
-    "fields": {
-      "$comment": "Add your new fields here. Don't require them here, do that above in the item schema.",
+    "virtual-assets": {
+      "title": "Virtual Assets",
       "type": "object",
-      "properties": {
-        "template:new_field": {
-          "type": "string"
-        },
-        "template:xyz": {
+      "additionalProperties": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/virtual-asset"
+          }
+        ]
+      }
+    },
+    "virtual-asset": {
+      "allOf": [
+        {
           "type": "object",
           "required": [
-            "x",
-            "y",
-            "z"
+            "hrefs"
           ],
           "properties": {
-            "x": {
-              "type": "number"
+            "hrefs": {
+              "title": "Virtual Asset references",
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "format": "iri-reference",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                ]
+              }
             },
-            "y": {
-              "type": "number"
+            "title": {
+              "title": "Virtual Asset title",
+              "type": "string"
             },
-            "z": {
-              "type": "number"
+            "description": {
+              "title": "Virtual Asset description",
+              "type": "string"
+            },
+            "type": {
+              "title": "Virtual Asset type",
+              "type": "string"
+            },
+            "roles": {
+              "title": "Virtual Asset roles",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
-        }, 
-        "template:another_one": {
-          "type": "array", 
-          "items": {
-            "type": "number"
-          }
+        },
+        {
+          "$ref": "https://schemas.stacspec.org/v1.0.0-rc.4/item-spec/json-schema/item.json#/definitions/common_metadata"
         }
-      },
-      "patternProperties": {
-        "^(?!template:)": {
-          "$comment": "Above, change `template` to the prefix of this extension"
-        }
-      },
-      "additionalProperties": false
+      ]
     }
   }
 }

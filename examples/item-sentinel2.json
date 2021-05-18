@@ -1,6 +1,6 @@
 {
   "type": "Feature",
-  "stac_version": "1.0.0-rc.2",
+  "stac_version": "1.0.0-rc.4",
   "stac_extensions": [
     "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
     "https://stac-extensions.github.io/view/v1.0.0/schema.json",
@@ -729,7 +729,7 @@
   "virtual:assets": {
     "sir": {
       "title": "Shortwave Infra-red",
-      "href": [
+      "hrefs": [
         "#B12",
         "#B8A",
         "#B04"
@@ -739,11 +739,15 @@
         "visual"
       ],
       "gsd": 10,
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "composition": [
-        
-      ]
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized"
     }
   },
-  "links": []
+  "links": [
+    {
+      "rel": "collection",
+      "href": "./collection.json",
+      "type": "application/json",
+      "title": "Sentinel-2 L2A Cogs Collection"
+    }
+  ]
 }

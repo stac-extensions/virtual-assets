@@ -7,8 +7,11 @@
 - **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
 - **Owner**: @emmanuelmathot
 
-This document explains the Virtual Assets Extension to the [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
-The virtual assets extensions is an extension for STAC Item and Collection that allows a virtual assets to be composed from *physical* assets (actual remote files) or virtual assets. It describes repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
+This document explains the Virtual Assets Extension to the
+[SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
+The virtual assets extensions is an extension for STAC Item and Collection that allows a virtual assets to be composed
+from *physical* assets (actual remote files) or virtual assets. It describes repositioning,
+and algorithms potentially applied as well as various kinds of metadata altered or added.
 
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item
@@ -26,14 +29,16 @@ The `virtual:assets` field is at the root level of the item as per the `assets` 
 
 ### Virtual Asset Object
 
-the virtual asset object is an extension of the core [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object). It inherits of all its fields (`href`, `title`, `description`, `type`, `roles`).
+the virtual asset object is an extension of the core
+[asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object).
+It inherits of all its fields (`href`, `title`, `description`, `type`, `roles`) except  that is replaced by `hrefs`.
 
 | Field Name  | Type      | Description |
 | ----------- | --------- | ----------- |
-| href        | \[string]    | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragement only preceded by `#` char identify an asset of the current Item or Collection. |
+| hrefs       | \[string]    | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragement only preceded by `#` char identify an asset of the current Item or Collection. |
 | title       | string    | The displayed title for clients and users. |
 | description | string    | A description of the Asset providing additional details, such as how it was processed or created. [CommonMark 0.29](http://commonmark.org/) syntax MAY be used for rich text representation. |
-| type        | string    | [Media type](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-media-type) of the asset. See the [common media types](../best-practices.md#common-media-types-in-stac) in the best practice doc for commonly used asset types. |
+| type        | string    | [Media type](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-media-type) of the asset. See the [common media types](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#common-media-types-in-stac) in the best practice doc for commonly used asset types. |
 | roles       | \[string] | The [semantic roles](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-roles) of the asset, similar to the use of `rel` in links. |
 
 #### Asset cross referencing using href
@@ -43,7 +48,8 @@ Here are the accepted URI types and their location resolution
 
 - `#B04` : Asset with key `B04` in the current STAC Item.
 - `./item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
-- `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
+- `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset
+with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
 
 ## Contributing
 

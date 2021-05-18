@@ -1,8 +1,7 @@
 {
-  "stac_version": "1.0.0-rc.1",
+  "stac_version": "1.0.0-rc.4",
   "stac_extensions": [
-    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/template/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json"
   ],
   "type": "Collection",
   "id": "collection",
@@ -29,29 +28,26 @@
       ]
     }
   },
-  "template:new_field": "test",
-  "template:xyz": {
-    "x": 1,
-    "y": 2,
-    "z": 3
-  },
-  "template:another_one": [
-    1,
-    2,
-    3
-  ],
   "assets": {
     "example": {
-      "href": "https://example.com/examples/file.xyz",
-      "template:new_field": "test"
+      "href": "https://example.com/examples/file.xyz"
+    },
+    "readme": {
+      "href": "https://example.com/examples/readme.md"
     }
   },
-  "item_assets": {
-    "data": {
+  "virtual:assets": {
+    "archive": {
+      "title": "Assets archive",
+      "hrefs": [
+        "#example",
+        "#readme"
+      ],
       "roles": [
+        "archive",
         "data"
       ],
-      "template:new_field": "test"
+      "type": "application/zip"
     }
   },
   "summaries": {
