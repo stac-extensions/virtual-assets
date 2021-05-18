@@ -9,9 +9,10 @@
 
 This document explains the Virtual Assets Extension to the
 [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
-The virtual assets extensions is an extension for STAC Item and Collection that allows a virtual assets to be composed
-from *physical* assets (actual remote files) or virtual assets. It describes repositioning,
-and algorithms potentially applied as well as various kinds of metadata altered or added.
+The **virtual assets** extensions is an extension for STAC Item and Collection that allows a virtual assets
+to be composed from 2 or more [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
+or virtual assets themself. It describes cross references and repositioning. It can be extended by other extensions to define
+algorithms applied as well as various kinds of metadata altered or added.
 
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item
@@ -41,7 +42,7 @@ It inherits of all its fields (`href`, `title`, `description`, `type`, `roles`) 
 | type        | string    | [Media type](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-media-type) of the asset. See the [common media types](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#common-media-types-in-stac) in the best practice doc for commonly used asset types. |
 | roles       | \[string] | The [semantic roles](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-roles) of the asset, similar to the use of `rel` in links. |
 
-#### Asset cross referencing using href
+#### Asset cross referencing using `hrefs`
 
 URIs defined in the href arrays may reference several location according to the type of URI notation used. 
 Here are the accepted URI types and their location resolution
@@ -50,6 +51,19 @@ Here are the accepted URI types and their location resolution
 - `./item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
 - `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset
 with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
+
+## Use Cases
+
+### Compressed Archive
+
+The [Collection example](examples/collection.json) describe an archive virtual asset composed of the 2 other assets of the collection.
+An implementation for this collection could propose an additional download button that would package the assets in an archive
+and return it to the user.
+
+### Raster Composition
+
+The [Raster composition](https://github.com/stac-extensions/composite#raster-composition-using-virtualassets) use case is described in the
+[`composite`](https://github.com/stac-extensions/composite) extension with additional fields.
 
 ## Contributing
 
