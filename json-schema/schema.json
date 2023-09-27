@@ -11,18 +11,17 @@
           "type": "object",
           "required": [
             "type",
-            "assets",
-            "virtual:assets"
+            "assets"
           ],
           "properties": {
             "type": {
               "const": "Feature"
             },
             "assets": {
-              "type": "object"
-            },
-            "virtual:assets": {
-              "$ref": "#/definitions/virtual-assets"
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/fields"
+              }
             }
           }
         },
@@ -37,18 +36,23 @@
           "type": "object",
           "required": [
             "type",
-            "assets",
-            "virtual:assets"
+            "assets"
           ],
           "properties": {
             "type": {
               "const": "Collection"
             },
             "assets": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/fields"
+              }
             },
-            "virtual:assets": {
-              "$ref": "#/definitions/virtual-assets"
+            "item_assets": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/fields"
+              }
             }
           }
         },
@@ -73,67 +77,46 @@
         }
       }
     },
-    "virtual-assets": {
-      "title": "Virtual Assets",
+    "fields": {
       "type": "object",
-      "additionalProperties": {
-        "allOf": [
-          {
-            "$ref": "#/definitions/virtual-asset"
-          }
-        ]
-      }
-    },
-    "virtual-asset": {
       "allOf": [
         {
-          "type": "object",
-          "required": [
-            "hrefs"
-          ],
-          "properties": {
-            "hrefs": {
-              "title": "Virtual Asset references",
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  {
-                    "type": "string",
-                    "format": "iri-reference",
-                    "minLength": 1
-                  },
-                  {
-                    "type": "string",
-                    "minLength": 2
-                  }
-                ]
+          "if": {
+            "properties": {
+              "roles": {
+                "const": "virtual"
               }
             },
-            "title": {
-              "title": "Virtual Asset title",
-              "type": "string"
-            },
-            "description": {
-              "title": "Virtual Asset description",
-              "type": "string"
-            },
-            "type": {
-              "title": "Virtual Asset type",
-              "type": "string"
-            },
-            "roles": {
-              "title": "Virtual Asset roles",
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
+            "required": [
+              "virtual:hrefs"
+            ]
           }
-        },
-        {
-          "$ref": "https://schemas.stacspec.org/v1.0.0-rc.4/item-spec/json-schema/item.json#/definitions/common_metadata"
         }
-      ]
+      ],
+      "properties": {
+        "virtual:hrefs": {
+          "title": "Virtual Asset references",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "iri-reference",
+                "minLength": 1
+              },
+              {
+                "type": "string",
+                "minLength": 2,
+                "pattern": "^#.*$"
+              }
+            ]
+          }
+        }
+      },
+      "patternProperties": {
+        "^(?!virtual:)": {}
+      },
+      "additionalProperties": false
     }
   }
 }

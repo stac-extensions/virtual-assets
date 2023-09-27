@@ -1,5 +1,5 @@
 {
-  "stac_version": "1.0.0-rc.4",
+  "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json"
   ],
@@ -34,16 +34,16 @@
     },
     "readme": {
       "href": "https://example.com/examples/readme.md"
-    }
-  },
-  "virtual:assets": {
+    },
     "archive": {
       "title": "Assets archive",
-      "hrefs": [
+      "href": "https://example.com/api/download/asset-zipper?url=https://example.com/examples/collection.json&assets=example,readme",
+      "virtual:hrefs": [
         "#example",
         "#readme"
       ],
       "roles": [
+        "virtual",
         "archive",
         "data"
       ],

@@ -1,6 +1,6 @@
 {
   "type": "Feature",
-  "stac_version": "1.0.0-rc.4",
+  "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
     "https://stac-extensions.github.io/view/v1.0.0/schema.json",
@@ -724,12 +724,11 @@
         0,
         1
       ]
-    }
-  },
-  "virtual:assets": {
+    },
     "sir": {
       "title": "Shortwave Infra-red",
-      "hrefs": [
+      "href": "https://maps.example.com/service/compose.tif?assets=B12,B8A,B11",
+      "virtual:hrefs": [
         "#B12",
         "#B8A",
         "#B04"

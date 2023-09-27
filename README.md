@@ -10,7 +10,7 @@
 This document explains the Virtual Assets Extension to the
 [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
 The **virtual assets** extensions is an extension for STAC Item and Collection that allows a virtual assets
-to be composed from 2 or more [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
+to be composed from 1 or more [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
 or virtual assets themself. It describes cross references and repositioning. It can be extended by other extensions to define
 algorithms applied as well as various kinds of metadata altered or added.
 
@@ -20,37 +20,39 @@ algorithms applied as well as various kinds of metadata altered or added.
 - [JSON Schema](json-schema/schema.json)
 - [Changelog](./CHANGELOG.md)
 
-## Item fields
+## Fields
 
-| Field Name           | Type                      | Description |
-| -------------------- | ------------------------- | ----------- |
-| virtual:assets       | [Virtual Asset Object](#virtual-asset-object) | **REQUIRED**. Dictionary of virtual asset objects that can be composed, each with a unique key. |
+The fields in the table below can be used in these parts of STAC documents:
 
-The `virtual:assets` field is at the root level of the item as per the `assets` field.
+- [ ] Catalogs
+- [ ] Collections
+- [ ] Item Properties (incl. Summaries in Collections)
+- [x] Assets (for both Collections and Items, incl. Item Asset Definitions in Collections)
+- [ ] Links
 
-### Virtual Asset Object
+| Field Name           | Type      | Description |
+| -------------------- | ----------| ----------- |
+| virtual:hrefs        | \[string] | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragment only preceded by `#` char identify an asset of the current Item or Collection. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset) |
 
-the virtual asset object is an extension of the core
-[asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object).
-It inherits of all its fields (`href`, `title`, `description`, `type`, `roles`) except  that is replaced by `hrefs`.
+### Asset cross referencing using `hrefs`
 
-| Field Name  | Type      | Description |
-| ----------- | --------- | ----------- |
-| hrefs       | \[string]    | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragement only preceded by `#` char identify an asset of the current Item or Collection. |
-| title       | string    | The displayed title for clients and users. |
-| description | string    | A description of the Asset providing additional details, such as how it was processed or created. [CommonMark 0.29](http://commonmark.org/) syntax MAY be used for rich text representation. |
-| type        | string    | [Media type](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-media-type) of the asset. See the [common media types](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#common-media-types-in-stac) in the best practice doc for commonly used asset types. |
-| roles       | \[string] | The [semantic roles](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-roles) of the asset, similar to the use of `rel` in links. |
-
-#### Asset cross referencing using `hrefs`
-
-URIs defined in the href arrays may reference several location according to the type of URI notation used. 
+URIs defined in the href arrays may reference several location according to the type of URI notation used.
 Here are the accepted URI types and their location resolution
 
 - `#B04` : Asset with key `B04` in the current STAC Item.
 - `./item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
 - `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset
 with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
+
+## Mandatory role
+
+Every asset defined with `virtual:hrefs` field must declare the `"virtual"` asset role in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#asset-roles) array.
+
+## Asset `href` link field
+
+When it is possible, the href link field of the virtual asset should be set to a resource
+that can be used to fetch the virtual asset (e.g. composition service).
+When not possible, the href link field should be set to the STAC Item or Collection that contains the virtual asset.
 
 ## Use Cases
 
