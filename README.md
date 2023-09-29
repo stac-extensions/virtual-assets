@@ -9,10 +9,9 @@
 
 This document explains the Virtual Assets Extension to the
 [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
-The **virtual assets** extensions is an extension for STAC Item and Collection that allows a virtual assets
-to be composed from 1 or more [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
-or virtual assets themself. It describes cross references and repositioning. It can be extended by other extensions to define
-algorithms applied as well as various kinds of metadata altered or added.
+
+The **virtual assets** is an extension for STAC that allows a virtual STAC asset to be composed from other STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
+
 
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item
@@ -30,42 +29,92 @@ The fields in the table below can be used in these parts of STAC documents:
 - [x] Assets (for both Collections and Items, incl. Item Asset Definitions in Collections)
 - [ ] Links
 
-| Field Name           | Type      | Description |
-| -------------------- | ----------| ----------- |
-| virtual:hrefs        | \[string] | **REQUIRED.** array of URIs to the assets object composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragment only preceded by `#` char identify an asset of the current Item or Collection. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset) |
+| Field Name         | Type         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| vrt:hrefs          | \[string]    | **REQUIRED.** array of URIs to the objects composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragment only preceded by `#` char identify an asset of the current Item or Collection. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset) |
+| vrt:rescale        | \[\[number]] | 2 dimensions array of delimited Min,Max range per band                                                                                                                                                                                                                                                                                                                                                                                                                |
+| vrt:resample       | string       | Resampling algorithm to apply to the virtual asset. See [GDAL resampling algorithm](https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r) for more details.                                                                                                                                                                                                                                                                                                   |
+| vrt:src_nodata     | \[number]    | Array of nodata values in the source bands                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| vrt:algorithm      | \[string]    | Algorithm identifier to apply to the virtual asset to compose                                                                                                                                                                                                                                                                                                                                                                                                         |
+| vrt:algorithm_opts | object       | any object representing the options for the algorithm                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
-### Asset cross referencing using `hrefs`
+### Asset referencing using `vrt:hrefs`
 
+The [fragment component](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) of the URI (after the `#`) is used
+to identify the asset (or the band) composing the virtual asset.
 URIs defined in the href arrays may reference several location according to the type of URI notation used.
 Here are the accepted URI types and their location resolution
 
-- `#B04` : Asset with key `B04` in the current STAC Item.
-- `./item-sentinel2.json#B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
-- `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#B04` : Asset
+- `#/assets/B04` : Asset with key `B04` in the current STAC Item.
+- `#/assets/data/bands/0` : Asset with key `data` and band index 0.
+- `./item-sentinel2.json#/assets/B04` : Asset with key `B04` in the STAC Item with the relative URL `./item-sentinel2.json`.
+- `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B04` : Asset
 with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
+
+> [!IMPORTANT]
+> the `bands` pointer under an asset would be valid only for STAC core version >= 1.1 but it can be interpreted as the bands
+> in the asset for version < 1.1 where it is not present.
+
+## Positioning
+
+The positioning of the source assets is defined by their position in the `vrt:hrefs` array.
+
+## Rescaling
+
+A rescaling of the values from the source asset(s) to the destination asset can be defined using the `vrt:rescale` field.
+It is specified as a 2 dimensions array of delimited Min,Max range per band.
+
+```json
+"vrt:rescale": [
+  [0, 10000], // band 1
+  [0, 10000], // band 2
+  [0, 10000]  // band 3
+]
+```
+
+A prescaling can also be performed according to the `offset` and `scale` fields value of the [raster](https://github.com/stac-extensions/raster) extension.
 
 ## Mandatory role
 
-Every asset defined with `virtual:hrefs` field must declare the `"virtual"` asset role in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#asset-roles) array.
+Every asset defined with `vrt:hrefs` field MUST declare the `"virtual"` asset role
+in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#asset-roles) array.
 
 ## Asset `href` link field
 
 When it is possible, the href link field of the virtual asset should be set to a resource
-that can be used to fetch the virtual asset (e.g. composition service).
-When not possible, the href link field should be set to the STAC Item or Collection that contains the virtual asset.
+that can be used to get the virtual asset (e.g. composition service).
+When not possible, the href link field should be set to the self link.
 
 ## Use Cases
 
-### Compressed Archive
+### Raster Composition
+
+### Simple RGB raster composition
+
+A very simple case would be the composition of a RGB natural color image of a
+[Sentinel-2 item](https://github.com/stac-extensions/raster/blob/main/examples/item-sentinel2.json).
+
+```json
+"assets": {
+  "overview": {
+    "roles": [ "data", "virtual" ],
+    "title": "Sentinel-2 Natural Color",
+    "type": "image/tiff; application=geotiff",
+    "href": "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json",
+    "vrt:hrefs": [ 
+      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B04",
+      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B03",
+      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B02"
+    ]
+  }
+}
+```
+
+### File Archive
 
 The [Collection example](examples/collection.json) describe an archive virtual asset composed of the 2 other assets of the collection.
 An implementation for this collection could propose an additional download button that would package the assets in an archive
 and return it to the user.
-
-### Raster Composition
-
-The [Raster composition](https://github.com/stac-extensions/composite#raster-composition-using-virtualassets) use case is described in the
-[`composite`](https://github.com/stac-extensions/composite) extension with additional fields.
 
 ## Contributing
 
