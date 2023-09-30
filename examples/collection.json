@@ -38,7 +38,7 @@
     "archive": {
       "title": "Assets archive",
       "href": "https://example.com/api/download/asset-zipper?url=https://example.com/examples/collection.json&assets=example,readme",
-      "virtual:hrefs": [
+      "vrt:hrefs": [
         "#example",
         "#readme"
       ],

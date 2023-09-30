@@ -2,7 +2,7 @@
 
 - **Title:** Virtual Assets
 - **Identifier:** <https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json>
-- **Field Name Prefix:** virtual
+- **Field Name Prefix:** vrt
 - **Scope:** Item, Collection
 - **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
 - **Owner**: @emmanuelmathot
@@ -34,7 +34,7 @@ The fields in the table below can be used in these parts of STAC documents:
 | vrt:hrefs          | \[string]    | **REQUIRED.** array of URIs to the objects composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragment only preceded by `#` char identify an asset of the current Item or Collection. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset) |
 | vrt:rescale        | \[\[number]] | 2 dimensions array of delimited Min,Max range per band                                                                                                                                                                                                                                                                                                                                                                                                                |
 | vrt:resample       | string       | Resampling algorithm to apply to the virtual asset. See [GDAL resampling algorithm](https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r) for more details.                                                                                                                                                                                                                                                                                                   |
-| vrt:src_nodata     | \[number]    | Array of nodata values in the source bands                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| vrt:src_nodata     | \[number]    | Array of nodata values in the source bands.                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | vrt:algorithm      | \[string]    | Algorithm identifier to apply to the virtual asset to compose                                                                                                                                                                                                                                                                                                                                                                                                         |
 | vrt:algorithm_opts | object       | any object representing the options for the algorithm                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
@@ -96,16 +96,39 @@ A very simple case would be the composition of a RGB natural color image of a
 
 ```json
 "assets": {
-  "overview": {
+  "trc": {
     "roles": [ "data", "virtual" ],
     "title": "Sentinel-2 Natural Color",
     "type": "image/tiff; application=geotiff",
-    "href": "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json",
+    "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json",
     "vrt:hrefs": [ 
-      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B04",
-      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B03",
-      "https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B02"
+      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B04",
+      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B03",
+      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B02"
     ]
+  }
+}
+```
+
+### Spectral index use case: NDVI
+
+The following example describes a virtual asset `NDVI` with the Normalized Difference Vegetation Index computed from 2 other bands.
+The `vrt:algorithm` field is specifying an algorithm name to apply to generate the virtual asset : `band_arithmetic` that
+process band pixels values according to the `expression` defined in the `vrt:algorithm_opts` object.
+Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
+
+```json
+"assets":{
+  "NDVI": 
+  {
+    "roles": [ "virtual", "data", "index" ],
+    "virtual:hrefs": [ "#/assets/B04", "#/assets/B05" ],
+    "title": "Normalized Difference Vegetation Index",
+    "vrt:algorithm": "band_arithmetic",
+    "vrt:algorithm_opts": {
+      "expression": "(B05–B04)/(B05+B04)"
+    },
+    "vrt:rescale": [[-1,1]]
   }
 }
 ```
