@@ -12,7 +12,6 @@ This document explains the Virtual Assets Extension to the
 
 The **virtual assets** is an extension for STAC that allows a virtual STAC asset to be composed from other STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
 
-
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item
   - [Collection example](examples/collection.json): Shows the basic usage of the extension in a STAC Collection
@@ -29,16 +28,21 @@ The fields in the table below can be used in these parts of STAC documents:
 - [x] Assets (for both Collections and Items, incl. Item Asset Definitions in Collections)
 - [ ] Links
 
-| Field Name         | Type         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| vrt:hrefs          | \[string]    | **REQUIRED.** array of URIs to the objects composing the virtual asset. Relative and absolute URI are both allowed. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the asset key. The fragment only preceded by `#` char identify an asset of the current Item or Collection. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset) |
-| vrt:rescale        | \[\[number]] | 2 dimensions array of delimited Min,Max range per band                                                                                                                                                                                                                                                                                                                                                                                                                |
-| vrt:resample       | string       | Resampling algorithm to apply to the virtual asset. See [GDAL resampling algorithm](https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r) for more details.                                                                                                                                                                                                                                                                                                   |
-| vrt:src_nodata     | \[number]    | Array of nodata values in the source bands.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| vrt:algorithm      | \[string]    | Algorithm identifier to apply to the virtual asset to compose                                                                                                                                                                                                                                                                                                                                                                                                         |
-| vrt:algorithm_opts | object       | any object representing the options for the algorithm                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Field Name         | Type                                                | Description                                                                                                                                                                               |
+| ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| vrt:hrefs          | \[[test](#object-referencing-using-vrthrefs)] | Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
+| vrt:rescale        | \[\[number]]                                        | 2 dimensions array of delimited Min,Max range per band                                                                                                                                    |
+| vrt:resample       | string                                              | Resampling algorithm to apply to the virtual asset. See [GDAL resampling algorithm](https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r) for more details.                       |
+| vrt:src_nodata     | \[number]                                           | Array of nodata values in the source bands.                                                                                                                                               |
+| vrt:algorithm      | \[string]                                           | Algorithm identifier to apply to the virtual asset to compose                                                                                                                             |
+| vrt:algorithm_opts | object                                              | any object representing the options for the algorithm                                                                                                                                     |
 
-### Asset referencing using `vrt:hrefs`
+### Object referencing using `vrt:hrefs`
+
+| Field Name | Type   | Description                                                                                                                                                                                                                                                                                                                    |
+| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| key        | string | Identifier of the part in the virtuasl asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
+| href       | string | Relative and absolute URI pointing to the STAC item object using JSON pointers. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an asset of the current Item or Collection. ) |
 
 The [fragment component](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) of the URI (after the `#`) is used
 to identify the asset (or the band) composing the virtual asset.
@@ -102,9 +106,9 @@ A very simple case would be the composition of a RGB natural color image of a
     "type": "image/tiff; application=geotiff",
     "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json",
     "vrt:hrefs": [ 
-      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B04",
-      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B03",
-      "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B02"
+      { "key": "B04", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B04" },
+      { "key": "B03", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B03" },
+      { "key": "B02", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B02" }
     ]
   }
 }
@@ -119,10 +123,12 @@ Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
 
 ```json
 "assets":{
-  "NDVI": 
+  "ndvi": 
   {
     "roles": [ "virtual", "data", "index" ],
-    "virtual:hrefs": [ "#/assets/B04", "#/assets/B05" ],
+    "vrt:hrefs": [
+      { "key": "B04", "href": "#/assets/B04"}, 
+      { "key": "B05", "href": "#/assets/B05"}],
     "title": "Normalized Difference Vegetation Index",
     "vrt:algorithm": "band_arithmetic",
     "vrt:algorithm_opts": {

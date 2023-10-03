@@ -82,18 +82,36 @@
       "gsd": 10,
       "href": "https://maps.example.com/service/compose.tif?assets=B04,B03,B02",
       "vrt:hrefs": [
-        "#/assets/B04",
-        "#/assets/B03",
-        "/#assets/B05"
+        {
+          "key": "B04",
+          "href": "#/assets/B04"
+        },
+        {
+          "key": "B03",
+          "href": "#/assets/B03"
+        },
+        {
+          "key": "B02",
+          "href": "#/assets/B02"
+        }
       ]
     },
     "sir": {
       "title": "Shortwave Infra-red",
       "href": "https://maps.example.com/service/compose.tif?assets=B12,B8A,B11",
-      "virtual:hrefs": [
-        "#/assets/B12",
-        "#/assets/B8A",
-        "#/assets/B11"
+      "vrt:hrefs": [
+        {
+          "key": "B12",
+          "href": "#/assets/B12"
+        },
+        {
+          "key": "B8A",
+          "href": "#/assets/B8A"
+        },
+        {
+          "key": "B11",
+          "href": "#/assets/B11"
+        }
       ],
       "roles": [
         "sir",
@@ -110,9 +128,15 @@
         "data",
         "index"
       ],
-      "virtual:hrefs": [
-        "#/assets/B04",
-        "#/assets/B05"
+      "vrt:hrefs": [
+        {
+          "key": "B04",
+          "href": "#/assets/B04"
+        },
+        {
+          "key": "B05",
+          "href": "#/assets/B05"
+        }
       ],
       "title": "Normalized Difference Vegetation Index",
       "vrt:algorithm": "band_arithmetic",

@@ -39,8 +39,14 @@
       "title": "Assets archive",
       "href": "https://example.com/api/download/asset-zipper?url=https://example.com/examples/collection.json&assets=example,readme",
       "vrt:hrefs": [
-        "#example",
-        "#readme"
+        {
+          "key": "example",
+          "href": "#/assets/example"
+        },
+        {
+          "key": "readme",
+          "href": "#/assets/readme"
+        }
       ],
       "roles": [
         "virtual",
