@@ -106,9 +106,9 @@ A very simple case would be the composition of a RGB natural color image of a
     "type": "image/tiff; application=geotiff",
     "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json",
     "vrt:hrefs": [ 
-      { "key": "B04", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B04" },
-      { "key": "B03", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B03" },
-      { "key": "B02", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B02" }
+      { "key": "red", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B04" },
+      { "key": "green", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B03" },
+      { "key": "blue", "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/B02" }
     ]
   }
 }
