@@ -10,7 +10,7 @@
 This document explains the Virtual Assets Extension to the
 [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
 
-The **virtual assets** is an extension for STAC that allows a virtual STAC asset to be composed from other STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
+The **virtual assets** is an extension for STAC that allows for the definition of a virtual asset composed from one or more non-virtual STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning, algorithms potentially applied, and various kinds of metadata altered or added.
 
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item
@@ -41,8 +41,8 @@ The fields in the table below can be used in these parts of STAC documents:
 
 | Field Name | Type   | Description                                                                                                                                                                                                                                                                                                                    |
 | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| key        | string | Identifier of the part in the virtuasl asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
-| href       | string | Relative and absolute URI pointing to the STAC item object using JSON pointers. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an asset of the current Item or Collection. ) |
+| key        | string | Identifier of the part in the virtual asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
+| href       | string | Relative and absolute URI pointing to the STAC item object using JSON pointers. Each URI **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an asset of the current Item or Collection. ) |
 
 The [fragment component](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) of the URI (after the `#`) is used
 to identify the asset (or the band) composing the virtual asset.
@@ -93,9 +93,9 @@ When not possible, the href link field should be set to the self link.
 
 ### Raster Composition
 
-### Simple RGB raster composition
+#### Simple RGB raster composition
 
-A very simple case would be the composition of a RGB natural color image of a
+A very simple case would be the composition of a RGB natural color image from a
 [Sentinel-2 item](https://github.com/stac-extensions/raster/blob/main/examples/item-sentinel2.json).
 
 ```json
@@ -114,12 +114,12 @@ A very simple case would be the composition of a RGB natural color image of a
 }
 ```
 
-### Spectral index use case: NDVI
+#### Spectral index use case: NDVI
 
-The following example describes a virtual asset `NDVI` with the Normalized Difference Vegetation Index computed from 2 other bands.
-The `vrt:algorithm` field is specifying an algorithm name to apply to generate the virtual asset : `band_arithmetic` that
-process band pixels values according to the `expression` defined in the `vrt:algorithm_opts` object.
-Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
+The following example describes a virtual asset `NDVI`. The Normalized Difference Vegetation Index (NDVI) is computed from 2 other bands.
+The `vrt:algorithm` field is specifying an algorithm name, in this case `band_arithmetic`, to apply to generate the virtual asset. The `vrt:algorithm` value is the algorithme used to process band pixels values according to the `expression` defined in the `vrt:algorithm_opts` object.
+
+This example also demonstrates how data values should also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
 
 ```json
 "assets":{
@@ -139,9 +139,9 @@ Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
 }
 ```
 
-### File Archive
+### File Archive Example
 
-The [Collection example](examples/collection.json) describe an archive virtual asset composed of the 2 other assets of the collection.
+The [collection example](examples/collection.json) describe an archive virtual asset composed of the 2 other assets of the collection.
 An implementation for this collection could propose an additional download button that would package the assets in an archive
 and return it to the user.
 
