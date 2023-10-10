@@ -30,7 +30,7 @@ The fields in the table below can be used in these parts of STAC documents:
 
 | Field Name         | Type                                                | Description                                                                                                                                                                               |
 | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| vrt:hrefs          | \[[test](#object-referencing-using-vrthrefs)] | Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
+| vrt:hrefs          | \[[ref object](#object-referencing-using-vrthrefs)] | Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
 | vrt:rescale        | \[\[number]]                                        | 2 dimensions array of delimited Min,Max range per band                                                                                                                                    |
 | vrt:resample       | string                                              | Resampling algorithm to apply to the virtual asset. See [GDAL resampling algorithm](https://gdal.org/programs/gdalwarp.html#cmdoption-gdalwarp-r) for more details.                       |
 | vrt:src_nodata     | \[number]                                           | Array of nodata values in the source bands.                                                                                                                                               |
@@ -42,7 +42,7 @@ The fields in the table below can be used in these parts of STAC documents:
 | Field Name | Type   | Description                                                                                                                                                                                                                                                                                                                    |
 | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | key        | string | Identifier of the part in the virtuasl asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
-| href       | string | Relative and absolute URI pointing to the STAC item object using JSON pointers. Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an asset of the current Item or Collection. ) |
+| href       | string | Relative and absolute URI pointing to the STAC item object using [JSON pointers](https://www.rfc-editor.org/rfc/rfc6901). Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an object of the current Item or Collection. ) |
 
 The [fragment component](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) of the URI (after the `#`) is used
 to identify the asset (or the band) composing the virtual asset.
@@ -56,8 +56,8 @@ Here are the accepted URI types and their location resolution
 with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
 
 > [!IMPORTANT]
-> the `bands` pointer under an asset would be valid only for STAC core version >= 1.1 but it can be interpreted as the bands
-> in the asset for version < 1.1 where it is not present.
+> the `bands` pointer under an asset would be valid only for STAC core version >= 1.1 but it can be interpreted as the band index
+> in the asset for version < 1.1 or in the items where it is not present.
 
 ## Positioning
 
