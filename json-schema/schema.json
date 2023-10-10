@@ -96,34 +96,31 @@
       "properties": {
         "vrt:hrefs": {
           "title": "Virtual Asset references",
-          "type": "object",
-          "additionalProperties": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "key",
-                "href"
-              ],
-              "properties": {
-                "key": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "href": {
-                  "oneOf": [
-                    {
-                      "type": "string",
-                      "format": "iri-reference",
-                      "minLength": 1
-                    },
-                    {
-                      "type": "string",
-                      "minLength": 2,
-                      "pattern": "^#.*$"
-                    }
-                  ]
-                }
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "href"
+            ],
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "href": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "format": "iri-reference",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "pattern": "^#.*$"
+                  }
+                ]
               }
             }
           }

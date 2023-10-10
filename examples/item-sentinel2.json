@@ -128,6 +128,7 @@
         "data",
         "index"
       ],
+      "href": "https://maps.example.com/collections/sentinel-s2-l2a-cogs/items/S2B_33SVB_20210221_0_L2A.json#/assets/ndvi",
       "vrt:hrefs": [
         {
           "key": "B04",
