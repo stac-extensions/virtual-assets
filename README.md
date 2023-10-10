@@ -10,7 +10,9 @@
 This document explains the Virtual Assets Extension to the
 [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
 
-The **virtual assets** is an extension for STAC that allows a virtual STAC asset to be composed from other STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning, and algorithms potentially applied as well as various kinds of metadata altered or added.
+The **virtual assets** is an extension for STAC that allows a virtual STAC asset to be composed from other
+STAC [assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) with repositioning,
+and algorithms potentially applied as well as various kinds of metadata altered or added.
 
 - Examples:
   - [Item example](examples/item-sentinel2.json): Shows the basic usage of the extension in a STAC Item

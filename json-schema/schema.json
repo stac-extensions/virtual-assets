@@ -88,33 +88,71 @@
               }
             },
             "required": [
-              "virtual:hrefs"
+              "vrt:hrefs"
             ]
           }
         }
       ],
       "properties": {
-        "virtual:hrefs": {
+        "vrt:hrefs": {
           "title": "Virtual Asset references",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "href"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "href": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "format": "iri-reference",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "string",
+                      "minLength": 2,
+                      "pattern": "^#.*$"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "vrt:rescale": {
+          "title": "Rescale",
           "type": "array",
           "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "iri-reference",
-                "minLength": 1
-              },
-              {
-                "type": "string",
-                "minLength": 2,
-                "pattern": "^#.*$"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
           }
+        },
+        "vrt:src_nodata": {
+          "title": "Source NoData",
+          "type": "number"
+        },
+        "vrt:algorithm": {
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "vrt:algorithm_opts": {
+          "title": "Algorithm Options",
+          "type": "object"
         }
       },
       "patternProperties": {
-        "^(?!virtual:)": {}
+        "^(?!vrt:)": {}
       },
       "additionalProperties": false
     }
