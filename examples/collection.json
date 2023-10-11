@@ -37,7 +37,7 @@
     },
     "archive": {
       "title": "Assets archive",
-      "href": "https://example.com/api/download/asset-zipper?url=https://example.com/examples/collection.json&assets=example,readme",
+      "href": "https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/collection.json#/assets/archive",
       "vrt:hrefs": [
         {
           "key": "example",
