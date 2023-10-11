@@ -78,13 +78,21 @@ the second the green band and the third the blue band.
 Every asset defined with `vrt:hrefs` field **MUST** declare the `"virtual"` asset role
 in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#asset-roles) array.
 
-## Asset `href` link field
+## Other Asset fields
+
+### `href` field
 
 The `href` link field in the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
 MUST be set to the self link of the asset.
 This is the combination of the item `self` link and the asset json pointer in the fragment.
 
 `https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/virtual`
+
+### `type` field
+
+The `type` field in the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
+MUST be set to the expected format of the virtual asset.
+Typically, a raster virtual asset composed by several geotiff bands would have the type `image/tiff; application=geotiff`.
 
 ## Use Cases
 
