@@ -125,20 +125,6 @@
             }
           }
         },
-        "vrt:rescale": {
-          "title": "Rescale",
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          }
-        },
-        "vrt:src_nodata": {
-          "title": "Source NoData",
-          "type": "number"
-        },
         "vrt:algorithm": {
           "title": "Algorithm",
           "type": "string"

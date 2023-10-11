@@ -33,8 +33,6 @@ The fields in the table below can be used in these parts of STAC documents:
 | Field Name         | Type                                                | Description                                                                                                                                                                               |
 | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | vrt:hrefs          | \[[ref object](#object-referencing-using-vrthrefs)] | Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
-| vrt:rescale        | \[\[number]]                                        | 2 dimensions array of delimited Min,Max range per band                                                                                                                                    |
-| vrt:src_nodata     | \[number]                                           | Array of nodata values in the source bands.                                                                                                                                               |
 | vrt:algorithm      | \[string]                                           | Algorithm identifier to apply to the virtual asset to compose                                                                                                                             |
 | vrt:algorithm_opts | object                                              | any object representing the options for the algorithm                                                                                                                                     |
 
@@ -57,7 +55,7 @@ Here are the accepted URI types and their location resolution
 - `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json#/assets/B04` : Asset
 with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercontent.com/stac-extensions/raster/main/examples/item-sentinel2.json`.
 
-> [!IMPORTANT]
+> \[!IMPORTANT]
 > the `bands` pointer under an asset would be valid only for STAC core version >= 1.1 but it can be interpreted as the band index
 > in the asset for version < 1.1 or in the items where it is not present.
 
@@ -74,21 +72,6 @@ Typically, in the case of the composition of a RGB image, the first pointer woul
 ]
 ```
 
-## Rescaling
-
-A rescaling of the values from the source asset(s) to the destination asset can be defined using the `vrt:rescale` field.
-It is specified as a 2 dimensions array of delimited Min,Max range per band.
-
-```json
-"vrt:rescale": [
-  [0, 10000], // band 1
-  [0, 10000], // band 2
-  [0, 10000]  // band 3
-]
-```
-
-A prescaling can also be performed according to the `offset` and `scale` fields value of the [raster](https://github.com/stac-extensions/raster) extension.
-
 ## Mandatory role
 
 Every asset defined with `vrt:hrefs` field **MUST** declare the `"virtual"` asset role
@@ -96,13 +79,12 @@ in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/bes
 
 ## Asset `href` link field
 
-When it is possible, the href link field of the virtual asset should be set to a resource
-that can be used to get the virtual asset (e.g. composition service).
-When not possible, the href link field should be set to the self link.
+The `href` link field in the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) MUST be set to the self link
+of the asset. This is the combination of the item `self` link and the asset json pointer in the fragment.
+
+`https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/virtual`
 
 ## Use Cases
-
-### Raster Composition
 
 ### Simple RGB raster composition
 
@@ -130,22 +112,23 @@ A very simple case would be the composition of a RGB natural color image of a
 The following example describes a virtual asset `NDVI` with the Normalized Difference Vegetation Index computed from 2 other bands.
 The `vrt:algorithm` field is specifying an algorithm name to apply to generate the virtual asset : `band_arithmetic` that
 process band pixels values according to the `expression` defined in the `vrt:algorithm_opts` object.
-Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
+Data value is also rescaled in the range `[-1,1]` using the `rescale` option.
 
 ```json
 "assets":{
   "ndvi": 
   {
+    "title": "Normalized Difference Vegetation Index",
     "roles": [ "virtual", "data", "index" ],
+    "type": "image/tiff; application=geotiff",
     "vrt:hrefs": [
       { "key": "B04", "href": "#/assets/B04"}, 
       { "key": "B05", "href": "#/assets/B05"}],
-    "title": "Normalized Difference Vegetation Index",
     "vrt:algorithm": "band_arithmetic",
     "vrt:algorithm_opts": {
-      "expression": "(B05–B04)/(B05+B04)"
-    },
-    "vrt:rescale": [[-1,1]]
+      "expression": "(B05–B04)/(B05+B04)",
+      "rescale": [[-1,1]]
+    }
   }
 }
 ```
@@ -155,6 +138,20 @@ Data value is also rescaled in the range `[-1,1]` using the `vrt:rescale` field.
 The [Collection example](examples/collection.json) describe an archive virtual asset composed of the 2 other assets of the collection.
 An implementation for this collection could propose an additional download button that would package the assets in an archive
 and return it to the user.
+
+```json
+"assets": {
+  "archive": {
+    "title": "Archive",
+    "roles": [ "virtual", "data", "archive" ],
+    "type": "application/zip",
+    "vrt:hrefs": [
+      { "key": "B04", "href": "#/assets/B04" },
+      { "key": "B05", "href": "#/assets/B05" }
+    ]
+  }
+}
+```
 
 ## Contributing
 

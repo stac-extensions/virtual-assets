@@ -142,14 +142,14 @@
       "title": "Normalized Difference Vegetation Index",
       "vrt:algorithm": "band_arithmetic",
       "vrt:algorithm_opts": {
-        "expression": "(B05–B04)/(B05+B04)"
-      },
-      "vrt:rescale": [
-        [
-          -1,
-          1
+        "expression": "(B05–B04)/(B05+B04)",
+        "rescale": [
+          [
+            -1,
+            1
+          ]
         ]
-      ]
+      }
     },
     "B01": {
       "title": "Band 1 (coastal)",
