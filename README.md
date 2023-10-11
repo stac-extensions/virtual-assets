@@ -32,7 +32,7 @@ The fields in the table below can be used in these parts of STAC documents:
 
 | Field Name         | Type                                                | Description                                                                                                                                                                               |
 | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| vrt:hrefs          | \[[ref object](#object-referencing-using-vrthrefs)] | Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
+| vrt:hrefs          | \[[ref object](#object-referencing-using-vrthrefs)] | **REQUIRED**. Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
 | vrt:algorithm      | \[string]                                           | Algorithm identifier to apply to the virtual asset to compose                                                                                                                             |
 | vrt:algorithm_opts | object                                              | any object representing the options for the algorithm                                                                                                                                     |
 
