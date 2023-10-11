@@ -62,7 +62,8 @@ with key `B04` in the STAC Item with the absolute URL `https://raw.githubusercon
 ## Positioning
 
 The positioning of the source objects is defined by their position in the `vrt:hrefs` array.
-Typically, in the case of the composition of a RGB image, the first pointer would be the red band, the second the green band and the third the blue band.
+Typically, in the case of the composition of a RGB image, the first pointer would be the red band,
+the second the green band and the third the blue band.
 
 ```json
 "vrt:hrefs": [
@@ -79,8 +80,9 @@ in the [`roles` field](https://github.com/radiantearth/stac-spec/blob/master/bes
 
 ## Asset `href` link field
 
-The `href` link field in the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) MUST be set to the self link
-of the asset. This is the combination of the item `self` link and the asset json pointer in the fragment.
+The `href` link field in the [asset object](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object)
+MUST be set to the self link of the asset.
+This is the combination of the item `self` link and the asset json pointer in the fragment.
 
 `https://raw.githubusercontent.com/stac-extensions/virtual-assets/main/examples/item-sentinel2.json#/assets/virtual`
 
