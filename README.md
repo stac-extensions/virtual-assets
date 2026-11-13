@@ -1,10 +1,10 @@
 # Virtual Assets Extension Specification
 
 - **Title:** Virtual Assets
-- **Identifier:** <https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json>
+- **Identifier:** <https://stac-extensions.github.io/virtual-assets/v1.0.1/schema.json>
 - **Field Name Prefix:** vrt
 - **Scope:** Item, Collection
-- **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
+- **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Pilot
 - **Owner**: @emmanuelmathot
 
 This document explains the Virtual Assets Extension to the
@@ -33,14 +33,14 @@ The fields in the table below can be used in these parts of STAC documents:
 | Field Name         | Type                                                | Description                                                                                                                                                                               |
 | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | vrt:hrefs          | \[[ref object](#object-referencing-using-vrthrefs)] | **REQUIRED**. Array of objects referencing the objects composing the virtual asset. Order is important as it describes the composition index (e.g. RGB composition with `red`, `green` and `blue` asset |
-| vrt:algorithm      | \[string]                                           | Algorithm identifier to apply to the virtual asset to compose                                                                                                                             |
+| vrt:algorithm      | string                                              | Algorithm identifier to apply to the virtual asset to compose                                                                                                                             |
 | vrt:algorithm_opts | object                                              | any object representing the options for the algorithm                                                                                                                                     |
 
 ### Object referencing using `vrt:hrefs`
 
 | Field Name | Type   | Description                                                                                                                                                                                                                                                                                                                    |
 | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| key        | string | Identifier of the part in the virtuasl asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
+| key        | string | Identifier of the part in the virtual asset. Used in other fields to reference the part.                                                                                                                                                                                                                                      |
 | href       | string | Relative and absolute URI pointing to the STAC item object using [JSON pointers](https://www.rfc-editor.org/rfc/rfc6901). Each Uri **MUST** contain the [fragment component](https://www.ietf.org/rfc/rfc3986.html#section-3.5) to identify the object in the stac object. The fragment only preceded by `#` char identify an object of the current Item or Collection. ) |
 
 The [fragment component](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) of the URI (after the `#`) is used

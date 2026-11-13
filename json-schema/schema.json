@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json#",
+  "$id": "https://stac-extensions.github.io/virtual-assets/v1.0.1/schema.json#",
   "title": "Virtual Assets Extension",
   "description": "STAC Virtual Assets Extension for STAC Items and STAC Collections.",
   "oneOf": [
@@ -20,7 +20,7 @@
             "assets": {
               "type": "object",
               "additionalProperties": {
-                "$ref": "#/definitions/fields"
+                "$ref": "#/definitions/asset"
               }
             }
           }
@@ -45,7 +45,7 @@
             "assets": {
               "type": "object",
               "additionalProperties": {
-                "$ref": "#/definitions/fields"
+                "$ref": "#/definitions/asset"
               }
             },
             "item_assets": {
@@ -72,27 +72,56 @@
         "stac_extensions": {
           "type": "array",
           "contains": {
-            "const": "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json"
+            "const": "https://stac-extensions.github.io/virtual-assets/v1.0.1/schema.json"
+          }
+        }
+      }
+    },
+    "asset": {
+      "$comment": "Asset with the virtual role rule. An asset with 'vrt:hrefs' MUST have the 'virtual' role, and an asset with the 'virtual' role MUST have 'vrt:hrefs'. Not applied to item_assets, because Item Asset Definitions can be partial.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/fields"
+        },
+        {
+          "if": {
+            "type": "object",
+            "required": [
+              "vrt:hrefs"
+            ]
+          },
+          "then": {
+            "$ref": "#/definitions/virtual_role"
+          }
+        },
+        {
+          "if": {
+            "$ref": "#/definitions/virtual_role"
+          },
+          "then": {
+            "required": [
+              "vrt:hrefs"
+            ]
+          }
+        }
+      ]
+    },
+    "virtual_role": {
+      "type": "object",
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "contains": {
+            "const": "virtual"
           }
         }
       }
     },
     "fields": {
       "type": "object",
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "roles": {
-                "const": "virtual"
-              }
-            },
-            "required": [
-              "vrt:hrefs"
-            ]
-          }
-        }
-      ],
       "properties": {
         "vrt:hrefs": {
           "title": "Virtual Asset references",
