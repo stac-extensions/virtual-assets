@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stac-extensions.github.io/virtual-assets/v1.0.1/schema.json#",
+  "title": "Virtual Assets Extension",
+  "description": "STAC Virtual Assets Extension for STAC Items and STAC Collections.",
+  "oneOf": [
+    {
+      "$comment": "This is the schema for STAC Items. Remove this object if this extension only applies to Collections.",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "assets"
+          ],
+          "properties": {
+            "type": {
+              "const": "Feature"
+            },
+            "assets": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/asset"
+              }
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/stac_extensions"
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "assets"
+          ],
+          "properties": {
+            "type": {
+              "const": "Collection"
+            },
+            "assets": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/asset"
+              }
+            },
+            "item_assets": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/fields"
+              }
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/stac_extensions"
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "stac_extensions": {
+      "type": "object",
+      "required": [
+        "stac_extensions"
+      ],
+      "properties": {
+        "stac_extensions": {
+          "type": "array",
+          "contains": {
+            "const": "https://stac-extensions.github.io/virtual-assets/v1.0.1/schema.json"
+          }
+        }
+      }
+    },
+    "asset": {
+      "$comment": "Asset with the virtual role rule. An asset with 'vrt:hrefs' MUST have the 'virtual' role, and an asset with the 'virtual' role MUST have 'vrt:hrefs'. Not applied to item_assets, because Item Asset Definitions can be partial.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/fields"
+        },
+        {
+          "if": {
+            "type": "object",
+            "required": [
+              "vrt:hrefs"
+            ]
+          },
+          "then": {
+            "$ref": "#/definitions/virtual_role"
+          }
+        },
+        {
+          "if": {
+            "$ref": "#/definitions/virtual_role"
+          },
+          "then": {
+            "required": [
+              "vrt:hrefs"
+            ]
+          }
+        }
+      ]
+    },
+    "virtual_role": {
+      "type": "object",
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "contains": {
+            "const": "virtual"
+          }
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "properties": {
+        "vrt:hrefs": {
+          "title": "Virtual Asset references",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "href"
+            ],
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "href": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "iri-reference",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "pattern": "^#.*$"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "vrt:algorithm": {
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "vrt:algorithm_opts": {
+          "title": "Algorithm Options",
+          "type": "object"
+        }
+      },
+      "patternProperties": {
+        "^(?!vrt:)": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}
