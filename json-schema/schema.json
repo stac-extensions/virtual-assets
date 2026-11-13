@@ -109,7 +109,7 @@
                 "minLength": 1
               },
               "href": {
-                "oneOf": [
+                "anyOf": [
                   {
                     "type": "string",
                     "format": "iri-reference",
